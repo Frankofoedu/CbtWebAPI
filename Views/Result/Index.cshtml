@@ -1,0 +1,83 @@
+﻿@model IEnumerable<CBTWebAPI.Models.Result>
+
+@{
+    ViewBag.Title = "Results";
+}
+
+<h2>All Results</h2>
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Centre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CorrectANswers)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Centre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CorrectANswers)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+            </td>
+        </tr>
+    }
+
+</table>
+<button id="export" class="btn btn-info">Export to Spreadsheet</button>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/table2csv")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('table').each(function () {
+                var $table = $(this);
+
+                $button = $('#export');
+
+                $button.click(function () {
+                    var csv = $table.table2CSV({
+                        delivery: 'value'
+                    });
+                    window.location.href = 'data:text/csv;charset=UTF-8,'
+                        + encodeURIComponent(csv);
+                });
+            });
+        });
+    </script>
+}
