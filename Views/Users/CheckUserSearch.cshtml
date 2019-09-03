@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Search Details";
+}
+
+    <h2>Search Details</h2>
+@using (Html.BeginForm("CheckUser", "Users", FormMethod.Get))
+{
+    
+    <div>
+        Email:<br>
+        <input type="email" id="email" name="email">
+
+        <input type="submit" id="submitId" value="submit" />
+
+    </div>
+
+}
