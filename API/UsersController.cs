@@ -19,15 +19,17 @@ namespace CBTWebAPI.Controllers
         private CBTWebAPIContext db = new CBTWebAPIContext();
 
         // GET: api/Users
-        public IQueryable<User> GetUsers()
+        public IList<User> GetUsers()
         {
-            return db.Users;
+            return db.Users.ToList();
         }
 
         // GET: api/Users/onitsha
-        public IQueryable<User> GetUsersByCentre(string centre)
+        [HttpGet]
+        [Route("api/UsersByCentre/{centre}")]
+        public IList<User> GetUsersByCentre(string centre)
         {
-            return db.Users.Where(x => x.Centre == centre);
+            return db.Users.Where(x => x.Centre == centre).ToList();
         }
 
         // GET: api/Users/5

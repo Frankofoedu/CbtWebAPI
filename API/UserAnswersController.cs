@@ -17,90 +17,112 @@ namespace CBTWebAPI.Controllers
     {
         private CBTWebAPIContext db = new CBTWebAPIContext();
 
-        // GET: api/UserAnswers
-        public IQueryable<UserAnswers> GetUserAnswers()
-        {
-            return db.UserAnswers;
-        }
+        //// GET: api/UserAnswers
+        //public IQueryable<UserAnswers> GetUserAnswers()
+        //{
+        //    return db.UserAnswers;
+        //}
 
-        // GET: api/UserAnswers/5
-        [ResponseType(typeof(UserAnswers))]
-        public IHttpActionResult GetUserAnswers(int id)
-        {
-            UserAnswers userAnswers = db.UserAnswers.Find(id);
-            if (userAnswers == null)
-            {
-                return NotFound();
-            }
+        //// GET: api/UserAnswers/5
+        //[ResponseType(typeof(UserAnswers))]
+        //public IHttpActionResult GetUserAnswers(int id)
+        //{
+        //    UserAnswers userAnswers = db.UserAnswers.Find(id);
+        //    if (userAnswers == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(userAnswers);
-        }
+        //    return Ok(userAnswers);
+        //}
 
         // PUT: api/UserAnswers/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutUserAnswers(int id, UserAnswers userAnswers)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[ResponseType(typeof(void))]
+        //public IHttpActionResult PutUserAnswers(int id, UserAnswers userAnswers)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (id != userAnswers.Id)
-            {
-                return BadRequest();
-            }
+        //    if (id != userAnswers.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            db.Entry(userAnswers).State = EntityState.Modified;
+        //    db.Entry(userAnswers).State = EntityState.Modified;
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserAnswersExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!UserAnswersExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
+        //    return StatusCode(HttpStatusCode.NoContent);
+        //}
 
         // POST: api/UserAnswers
-        [ResponseType(typeof(UserAnswers))]
-        public IHttpActionResult PostUserAnswers(UserAnswers userAnswers)
+        [ResponseType(typeof(User))]
+        public IHttpActionResult PostUserAnswers(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.UserAnswers.Add(userAnswers);
-            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = userAnswers.Id }, userAnswers);
+            //checks if user exist in users table
+            var _user = db.Users.FirstOrDefault(x => x.Email == user.Email);
+
+
+            
+            if (_user != null)
+            {
+                //check if user has submitted previously
+                if (_user.QuestionAndAnswers.Any())
+                {
+                    return Ok("Result already taken");
+                }
+
+                _user.QuestionAndAnswers = user.QuestionAndAnswers;
+                db.SaveChanges();
+                // userAnswers.UserId = user.Id;
+                //  userAnswers.User.Id = user.Id;
+            }
+            else
+            {
+                return BadRequest("No user for that email");
+            }
+
+
+            return Ok("Result created");
         }
 
         // DELETE: api/UserAnswers/5
-        [ResponseType(typeof(UserAnswers))]
-        public IHttpActionResult DeleteUserAnswers(int id)
-        {
-            UserAnswers userAnswers = db.UserAnswers.Find(id);
-            if (userAnswers == null)
-            {
-                return NotFound();
-            }
+        //[ResponseType(typeof(UserAnswers))]
+        //public IHttpActionResult DeleteUserAnswers(int id)
+        //{
+        //    UserAnswers userAnswers = db.UserAnswers.Find(id);
+        //    if (userAnswers == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            db.UserAnswers.Remove(userAnswers);
-            db.SaveChanges();
+        //    db.UserAnswers.Remove(userAnswers);
+        //    db.SaveChanges();
 
-            return Ok(userAnswers);
-        }
+        //    return Ok(userAnswers);
+        //}
 
         protected override void Dispose(bool disposing)
         {
@@ -111,9 +133,9 @@ namespace CBTWebAPI.Controllers
             base.Dispose(disposing);
         }
 
-        private bool UserAnswersExists(int id)
-        {
-            return db.UserAnswers.Count(e => e.Id == id) > 0;
-        }
+        //private bool UserAnswersExists(int id)
+        //{
+        //    return db.UserAnswers.Count(e => e.Id == id) > 0;
+        //}
     }
 }
