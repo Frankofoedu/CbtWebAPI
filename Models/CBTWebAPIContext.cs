@@ -20,10 +20,15 @@ namespace CBTWebAPI.Models
         {
         }
 
-        public DbSet<UserAnswers> UserAnswers { get; set; }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<QuestionAndAnswer> QuestionAndAnswers { get; set; }
+        // public System.Data.Entity.DbSet<CBTWebAPI.Models.Result> Results { get; set; }
 
-        public System.Data.Entity.DbSet<CBTWebAPI.Models.Result> Results { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().HasMany(x => x.QuestionAndAnswers).WithRequired().WillCascadeOnDelete();
+        }
     }
 }

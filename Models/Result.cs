@@ -23,9 +23,12 @@ namespace CBTWebAPI.Models
 
         public static IEnumerable<Result> GetAllResults(CBTWebAPIContext db)
         {
-            var answers = db.UserAnswers.ToList();
+            var answers = db.Users.ToList();
 
-           return answers.Select(m => new Result { Email = m.User.Email, FullName = m.User.FullName, PhoneNumber = m.User.PhoneNumber, Centre = m.User.Centre, CorrectANswers = m.QuestionAndAnswers.Where(x => x.Answer == x.CorrectAnswer).Count() });
+
+           return answers.Where(x => x.QuestionAndAnswers.Any()).Select(m => new Result { Email = m.Email, FullName = m.FullName, PhoneNumber = m.PhoneNumber, Centre = m.Centre, CorrectANswers = m.QuestionAndAnswers.Where(x => x.Answer == x.CorrectAnswer).Count() });
         }
     }
+
+   
 }
